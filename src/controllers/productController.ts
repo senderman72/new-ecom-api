@@ -68,6 +68,27 @@ export const updateProduct = async (req: Request, res: Response) => {
   }
 };
 
+export const updateProductStock = async (
+  productName: string,
+  quantity: number
+): Promise<void> => {
+  try {
+    const sql = `
+      UPDATE products 
+      SET stock = stock - ?
+      WHERE name = ?
+    `;
+    const params = [quantity, productName];
+    const [result] = await db.query<ResultSetHeader>(sql, params);
+
+    if (result.affectedRows === 0) {
+      throw new Error(`Product not found with ID ${productName}`);
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const deleteProduct = async (req: Request, res: Response) => {
   const id = req.params.id;
 
