@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://new-ecommerce-client.vercel.app/",
+    origin: "https://new-ecommerce-client.vercel.app",
     credentials: true,
   })
 );
