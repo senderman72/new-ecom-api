@@ -6,14 +6,36 @@ import { updateProductStock } from "./productController";
 const stripe = require("stripe")(STRIPE_SECRET_KEY);
 
 export const checkoutSessionEmbedded = async (req: Request, res: Response) => {
+  const { cart, orderId } = req.body;
+
+  const lineItems = cart.map((item) => {
+    return {
+      price_data: {
+        currency: "sek",
+        product_data: {
+          name: item.product.name,
+          images: [item.product.image],
+        },
+        unit_amount: item.product.price * 100,
+      },
+      adjustable_quantity: {
+        enabled: true,
+        minimum: 1,
+        maximum: 10,
+      },
+
+      quantity: item.count,
+    };
+  });
+
   const session = await stripe.checkout.sessions.create({
-    line_items: req.body.line_items,
+    line_items: lineItems,
     mode: "payment",
     ui_mode: "embedded",
     return_url:
       // "http://localhost:5173/order-confirmation/{CHECKOUT_SESSION_ID}",
       "https://new-ecommerce-client.vercel.app/order-confirmation/{CHECKOUT_SESSION_ID}",
-    client_reference_id: req.body.orderId,
+    client_reference_id: orderId,
   });
 
   res.send({ clientSecret: session.client_secret });
