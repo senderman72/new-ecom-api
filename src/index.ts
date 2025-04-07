@@ -14,7 +14,10 @@ app.use(cookieParser());
 app.use(
   cors({
     // origin: "http://localhost:5173",
-    origin: "https://new-ecommerce-client.vercel.app",
+    origin: [
+      "http://localhost:5173",
+      "https://new-ecommerce-client.vercel.app",
+    ],
     credentials: true,
   })
 );
