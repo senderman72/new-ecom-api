@@ -1,11 +1,11 @@
+import { VercelRequest, VercelResponse } from "@vercel/node";
 import express from "express";
 import { connectDB } from "./config/db";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { VercelRequest, VercelResponse } from "@vercel/node";
-
 import dotenv from "dotenv";
 dotenv.config();
+
 const app = express();
 
 // Middleware
@@ -13,7 +13,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    // origin: "http://localhost:5173",
     origin: [
       "http://localhost:5173",
       "https://new-ecommerce-client.vercel.app",
@@ -38,12 +37,8 @@ app.use("/stripe", stripeRouter);
 
 // Attempt to connect to the database
 connectDB();
-// Start Express server
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`The server is running at http://localhost:${PORT}`);
-});
 
-export default (req: VercelRequest, res: VercelResponse) => {
-  return app(req, res);
+// Vercel function export
+export default async (req: VercelRequest, res: VercelResponse) => {
+  app(req, res); // Handle request using express
 };
