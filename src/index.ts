@@ -17,6 +17,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://new-ecommerce-client.vercel.app",
+      "https://new-ecom-api.vercel.app/stripe/create-checkout-session-embedded",
     ],
     credentials: true,
   })
